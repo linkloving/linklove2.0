@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PullToRefreshLibrary/PullToRefreshLibrary.iml" filepath="$PROJECT_DIR$/PullToRefreshLibrary/PullToRefreshLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/greendao/greendao.iml" filepath="$PROJECT_DIR$/greendao/greendao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/linklovingApp.iml" filepath="$PROJECT_DIR$/linklovingApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/linkloving_ble4.0_lib/linkloving_ble4.0_lib.iml" filepath="$PROJECT_DIR$/linkloving_ble4.0_lib/linkloving_ble4.0_lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lnt_sdk_for_as/lnt_sdk_for_as.iml" filepath="$PROJECT_DIR$/lnt_sdk_for_as/lnt_sdk_for_as.iml" />
+      <module fileurl="file://$PROJECT_DIR$/onkeyshare/onkeyshare.iml" filepath="$PROJECT_DIR$/onkeyshare/onkeyshare.iml" />
+    </modules>
+  </component>
+</project>

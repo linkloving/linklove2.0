@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:id="@+id/step_linear_day"
+    android:background="@color/white">
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="50dp"
+        >
+
+        <com.linkloving.dyh08.ViewUtils.Wheelview.WheelView
+            android:id="@+id/step_month_wheelView"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+
+        </com.linkloving.dyh08.ViewUtils.Wheelview.WheelView>
+    </LinearLayout>
+
+
+
+    <ImageView
+        android:id="@+id/step_month_next"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_vertical"
+        android:background="@mipmap/nextpageye80"
+        />
+</LinearLayout>
