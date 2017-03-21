@@ -1,15 +1,21 @@
 package com.linkloving.rtring_new.logic.UI.launch;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.linkloving.rtring_new.BleService;
 import com.linkloving.rtring_new.IntentFactory;
@@ -18,6 +24,7 @@ import com.linkloving.rtring_new.R;
 import com.linkloving.rtring_new.basic.AppManager;
 import com.linkloving.rtring_new.logic.dto.UserEntity;
 import com.linkloving.rtring_new.prefrences.PreferencesToolkits;
+import com.linkloving.rtring_new.utils.PermissionUtil;
 import com.linkloving.rtring_new.utils.logUtils.MyLog;
 
 public class AppStartActivity extends AppCompatActivity {
@@ -101,6 +108,14 @@ public class AppStartActivity extends AppCompatActivity {
             {
             }
         });
+        PermissionUtil.bluetoothPermission(AppStartActivity.this);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

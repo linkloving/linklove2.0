@@ -162,8 +162,9 @@ public class DeviceActivity extends ToolBarActivity implements View.OnClickListe
             activity_own_find.setVisibility(View.GONE);
         } else if (userEntity.getDeviceEntity().getModel_name().startsWith("B")) {
             device_img.setImageDrawable(getResources().getDrawable(R.mipmap.band_logo));
+        }else{
+            device_img.setImageDrawable(getResources().getDrawable(R.mipmap.bund3_logo));
         }
-
         //如果是主界面提示需要更新 那就直接开始更新
         if(type == DEVICE_UPDATE){
             click_oad = true;

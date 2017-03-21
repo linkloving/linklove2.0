@@ -55,7 +55,6 @@ public class bund3bandstep1 extends ToolBarActivity {
         skipBtn.setLayoutParams(layoutParams);
         skipBtn.setText(getString(R.string.bound_skip));
         skipBtn.setTextColor(getResources().getColor(R.color.white));
-
         next = (Button) findViewById(R.id.next);
     }
 

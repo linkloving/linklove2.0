@@ -34,6 +34,7 @@ import com.linkloving.rtring_new.prefrences.devicebean.ModelInfo;
 import com.linkloving.rtring_new.utils.CommonUtils;
 import com.linkloving.rtring_new.utils.ToolKits;
 import com.linkloving.rtring_new.utils.logUtils.MyLog;
+import com.linkloving.rtring_new.utils.sportUtils.LntUtils;
 import com.lnt.rechargelibrary.impl.BalanceCallbackInterface;
 import com.lnt.rechargelibrary.impl.BalanceUtil;
 import com.lnt.rechargelibrary.impl.ComplaintQueryUtil;
@@ -144,6 +145,9 @@ public class WalletActivity extends ToolBarActivity {
     protected void onDestroy() {
         super.onDestroy();
         provider.setBleProviderObserver(null);
+        if (RechargeUtil.closeInterface!=null){
+            RechargeUtil.closeInterface.onClose();
+        }
     }
 
     @Override
@@ -152,7 +156,6 @@ public class WalletActivity extends ToolBarActivity {
         setContentView(R.layout.activity_wallet);
         userEntity = MyApplication.getInstance(this).getLocalUserInfoProvider();
         provider = BleService.getInstance(this).getCurrentHandlerProvider();
-
         bleProviderObserver = new BLEProviderObserverAdapterImpl();
         provider.setBleProviderObserver(bleProviderObserver);
         MyLog.e(TAG, provider.isConnectedAndDiscovered() + "------------provider.isConnectedAndDiscovered()");
@@ -255,6 +258,7 @@ public class WalletActivity extends ToolBarActivity {
             if (provider.isConnectedAndDiscovered()) {
                 if (deviceInfo.customer.equals(LPDeviceInfo.LINGNANTONG)) {
                     //开始去查询卡片信息了 弹出dialog
+                    LntUtils.registApp(WalletActivity.this);
                     dialog_pay.show();
                     provider.closeSmartCard(WalletActivity.this);
                     Button btn = getRightButton();
@@ -287,7 +291,7 @@ public class WalletActivity extends ToolBarActivity {
                         }
                     });
                     //岭南通内嵌读取流程
-                    RechargeUtil.setBluetoothBase(WalletActivity.this, provider);
+                    RechargeUtil.setBluetoothBase(MyApplication.getInstance(WalletActivity.this), provider );
                     lntBalance();
                     MyLog.e(TAG, "岭南通内嵌读取流程开始了");
 
@@ -362,7 +366,7 @@ public class WalletActivity extends ToolBarActivity {
                                 if (success) {
                                     MyLog.e(TAG, "username:" + lntusername);
                                     PreferencesToolkits.saveLNTusername(WalletActivity.this, lntusername);
-                                    RechargeUtil.recharge(WalletActivity.this, RechargeUtil.LINKLOVE, provider.getCurrentDeviceMac(), lntusername, new RechargeCallbackInterface() {
+                                    RechargeUtil.bleRecharge(WalletActivity.this, RechargeUtil.LINKLOVE, provider.getCurrentDeviceMac(), lntusername, new RechargeCallbackInterface() {
                                         @Override
                                         public void onFail(String arg0) {
                                             Log.e(TAG, "充值onFail回调:" + arg0);
@@ -397,7 +401,7 @@ public class WalletActivity extends ToolBarActivity {
     }
 
     private void lntBalance() {
-        BalanceUtil.queryBalance(WalletActivity.this, WalletActivity.this, RechargeUtil.LINKLOVE, provider.getCurrentDeviceMac(), null, false, new BalanceCallbackInterface() {
+        BalanceUtil.queryBleBalance(WalletActivity.this, WalletActivity.this, RechargeUtil.LINKLOVE, provider.getCurrentDeviceMac(), null, false, new BalanceCallbackInterface() {
             @Override
             public void onSuccess(String msg, String balance, String cardNum, String thresholdValue) {
                 // TODO Auto-generated method stub
@@ -407,7 +411,7 @@ public class WalletActivity extends ToolBarActivity {
                 Log.e(TAG, "查询余额onSuccess回调thresholdValue:" + thresholdValue);
                 balanceResult.setText(balance);
                 //余额查询完后去显示交易记录
-                RecordUtil.recordQuery(WalletActivity.this, WalletActivity.this, RecordUtil.LINKLOVE, provider.getCurrentDeviceMac(), false, new RecordCallbackInterface() {
+                RecordUtil.recordBleQuery(WalletActivity.this, WalletActivity.this, RecordUtil.LINKLOVE, provider.getCurrentDeviceMac(), false, new RecordCallbackInterface() {
                     @Override
                     public void onSuccess(String s, List<Map<String, Object>> list) {
                         if (list.size() <= 0) {
@@ -695,11 +699,8 @@ public class WalletActivity extends ToolBarActivity {
 //            provider.closeSmartCard(WalletActivity.this);
 //            // 首先清空集合
 //            provider.openSmartCard(WalletActivity.this);
-            initData();
+//            initData();
         }
     }
-
-    ;
-
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">连爱</string>
+    <string name="app_name">大唐</string>
     <!--注册-->
     <string name="login_activity_wechat">请安装微信客户端</string>
     <string name="login_activity_wechat_success">授权成功</string>
@@ -618,6 +618,7 @@
     <string name="bound_active_notice">5v DC</string>
     <string name="bound_active_notice2">可以用手机充电器或电脑USB端口</string>
     <string name="bound_active_notice3">1.找到与表盘四位ID相同的手表</string>
+    <string name="bound3_active_notice2">1、在蓝牙设备列表中找到与机芯侧边相同的四位ID</string>
     <string name="bound3_active_notice3">1.找到与表盘四位ID相同的手环</string>
     <string name="bound_active_notice4">2.点击</string>
     <string name="bound_step_text1">1、从机芯缺口处打开机芯</string>

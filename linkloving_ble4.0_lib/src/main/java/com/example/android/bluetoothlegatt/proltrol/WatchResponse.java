@@ -207,7 +207,21 @@ public class WatchResponse {
 			}
 			return hex;
 		}
-		
+
+
+	public List<LpHeartrateData> toLPHeartrateDataList (WatchResponse response)throws LPException{
+		byte[] data = response.getData();
+		ArrayList<LpHeartrateData> list = new ArrayList<>();
+		for (int i=0;i<data[5];i++){
+			LpHeartrateData lpHeartrateData = new LpHeartrateData();
+			int startTime = LPUtil.makeInt(data[8 * i + 10], data[8 * i + 9], data[8 * i + 8], data[8 * i + 7]);
+			lpHeartrateData.setStartTime(startTime);
+			lpHeartrateData.setMaxRate(data[8*i+11]);
+			lpHeartrateData.setAvgRate(data[8*i+12]);
+			list.add(lpHeartrateData);
+		}
+		return  list  ;
+	}
 		
 		public  List< LPSportData >  toLPSportDataList(int devicetime) throws LPException {
 //			if( data[2] != LepaoCommand.COMMAND_IS_DATA || data[3] != LepaoCommand.COMMAND_GET_SPORT_DATA ) {

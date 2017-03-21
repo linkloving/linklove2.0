@@ -367,7 +367,7 @@ public class IntentFactory {
 
     //绑定手环
     public static Intent startActivityBundBand3(Context context) {
-        Intent intent = new Intent(context, Band3ListActivity.class);
+        Intent intent = new Intent(context, bund3bandstep1.class);
         return intent;
     }
 

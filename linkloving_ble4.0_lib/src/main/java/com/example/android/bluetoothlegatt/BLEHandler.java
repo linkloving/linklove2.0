@@ -8,12 +8,14 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.android.bluetoothlegatt.proltrol.LPUtil;
+import com.example.android.bluetoothlegatt.proltrol.LpHeartrateData;
 import com.example.android.bluetoothlegatt.proltrol.dto.LLTradeRecord;
 import com.example.android.bluetoothlegatt.proltrol.dto.LLXianJinCard;
 import com.example.android.bluetoothlegatt.proltrol.dto.LPDeviceInfo;
 import com.example.android.bluetoothlegatt.proltrol.dto.LPSportData;
 import com.example.android.bluetoothlegatt.utils.OwnLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BLEHandler extends Handler {
@@ -236,6 +238,7 @@ public abstract class BLEHandler extends Handler {
 		 */
 		public void updateFor_handleNotEnableMsg() {
 		}
+
 
 		public void updateFor_handleHaveNotConnectMsg() {
 		}
@@ -659,6 +662,9 @@ public abstract class BLEHandler extends Handler {
 			}else{
 				notifyforsendGoalFaild();
 			}
+		}
+		else if (typeIndex==BLEProvider.INDEX_GET_HEART_RATE)	{
+			notifyforgerHeartList((ArrayList<LpHeartrateData>) obj);
 		}
 		else if (typeIndex == BLEProvider.INDEX_SEND_OAD_HEAD) {
 
@@ -1224,6 +1230,13 @@ public abstract class BLEHandler extends Handler {
 		if (bleProviderObserver != null)
 			bleProviderObserver.updateFor_notifyForDeviceUnboundFaild_D();
 	}
+
+	protected  void notifyforgerHeartList(ArrayList<LpHeartrateData> obj){
+//		if (bleProviderObserver != null)
+//			bleProviderObserver.updateFor_notifyforgerHeartList( obj);
+//		OwnLog.e("BluetoothActivity","解绑成功+notifyforgerHeartList");
+	}
+
 
 	/**
 	 * 当可以继续OAD后，将会调用此方法，以便通知上层应用等.

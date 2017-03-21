@@ -335,7 +335,6 @@ public class BLEListActivity extends ToolBarActivity {
                             if(timer!=null)
                                 timer.cancel();
                             dialog_bound.dismiss();
-
                         }
                         BleService.getInstance(BLEListActivity.this).releaseBLE();
                         Log.e(TAG,"REFRESH");

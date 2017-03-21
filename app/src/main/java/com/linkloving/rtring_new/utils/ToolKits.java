@@ -202,6 +202,34 @@ private final static String TAG = ToolKits.class.getSimpleName();
 		toast.show();
 
 	}
+	//当前周,上周周日的日期
+	public static   Date getFirstSundayOfThisWeek(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
+		if (day_of_week == 0)
+			day_of_week = 7;
+		/**日期改动*/
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.add(Calendar.DATE, -day_of_week );
+		return c.getTime();
+	}
+
+
+	//当前周周六的日期
+	public static Date getStaurdayofThisWeek(Date date){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
+		MyLog.i(TAG, "day_of_week=" + day_of_week);
+		if (day_of_week ==0)
+			day_of_week=7;
+		c.add(Calendar.DATE, 7 - day_of_week-1);
+		return c.getTime();
+	}
+
 
 	/**
 	 * 需要权限:android.permission.GET_TASKS
@@ -674,6 +702,21 @@ private final static String TAG = ToolKits.class.getSimpleName();
 			day_of_week=7;
 		c.add(Calendar.DATE, 7 - day_of_week);
 		return c.getTime();
+	}
+
+	/**
+	 * 获取这个日期有多少天.
+	 * @param date
+	 * @return
+	 */
+	public static int getMonthMount(Date date){
+		SimpleDateFormat sim=new SimpleDateFormat(ToolKits.DATE_FORMAT_YYYY_MM_DD);
+		ArrayList<String> arrayList=new ArrayList<>();
+		//获取当前月第一天：
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int days=c.getActualMaximum(Calendar.DAY_OF_MONTH);//这个月有多少天
+		return days;
 	}
 
 	//获取一个星期所有日期的集合

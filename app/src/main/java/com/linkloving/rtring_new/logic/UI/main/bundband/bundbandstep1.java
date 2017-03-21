@@ -125,6 +125,5 @@ public class bundbandstep1 extends ToolBarActivity {
                 BleService.getInstance(bundbandstep1.this).getCurrentHandlerProvider().setCurrentDeviceMac(null);
             }
         }
-
     }
 }

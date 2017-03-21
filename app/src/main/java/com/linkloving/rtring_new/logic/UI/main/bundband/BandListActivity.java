@@ -191,7 +191,7 @@ public class BandListActivity extends ToolBarActivity {
         });
 
         LayoutInflater inflater = getLayoutInflater();
-        final View layout = inflater.inflate(R.layout.activity_bound_band3, (LinearLayout) findViewById(R.id.layout_bundband));
+        final View layout = inflater.inflate(R.layout.activity_bund_band3, (LinearLayout) findViewById(R.id.layout_bundband));
         boundBtn = (Button) layout.findViewById(R.id.btncancle);
         boundBtn.setOnClickListener(new View.OnClickListener() {
 

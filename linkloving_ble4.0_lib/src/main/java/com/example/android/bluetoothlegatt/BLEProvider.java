@@ -232,6 +232,8 @@ public  class BLEProvider
 	public static final int INDEX_SEND_DATA_CARD= INDEX_SEND_DATA + 1;
 	/** 指令代码：获取modelName */
 	public static final int INDEX_GET_MODEL= INDEX_SEND_DATA_CARD + 1;
+	/** 指令代码：发送读取心率的指令 */
+	public static final int INDEX_GET_HEART_RATE= INDEX_GET_MODEL + 1;
 	// Stops scanning after 10 seconds.
 	private static final long SCAN_PERIOD = 10000;
 
@@ -958,6 +960,11 @@ public  class BLEProvider
 	  OwnLog.i(TAG, "..................SetPower Thread........................");
 	   runIndexProess(context, INDEX_POWER,deviceInfo);
    }
+
+	public void GetHeartrate(Context context){
+		OwnLog.i(TAG, "..................GetHeartrate Thread........................");
+		runIndexProess(context,INDEX_GET_HEART_RATE);
+	}
    
    /* 设置保持状态*///INDEX_SEND_0X5f
    public void keepstate(Context context)
@@ -1776,7 +1783,16 @@ public  class BLEProvider
 				    	msg.obj = mLepaoProtocalImpl.requestbound_fit();
 				    	msg.sendToTarget();
 				    	break;
-				    // 请求绑定_美国(循环)
+//					发送获取心率的指令
+					case INDEX_GET_HEART_RATE:
+						Log.d(TAG, ".................INDEX_GET_HEART_RATE................");
+						msg = mHandler.obtainMessage();
+						msg.what = MSG_BLE_DATA;
+						msg.arg1 = INDEX_GET_HEART_RATE;
+						msg.obj =  mLepaoProtocalImpl.getHeartrate(0xfF,0x7F,0) ;
+						msg.sendToTarget();
+						break;
+					// 请求绑定_美国(循环)
 				    case INDEX_REQUEST_BOUND_RECY:
 				    	Log.d(TAG, ".................INDEX_REQUEST_BOUND_RECY................");
 				    	msg = mHandler.obtainMessage();

@@ -75,6 +75,7 @@ import com.linkloving.rtring_new.http.data.DataFromServer;
 import com.linkloving.rtring_new.logic.UI.customerservice.serviceItem.Feedback;
 import com.linkloving.rtring_new.logic.UI.device.DeviceActivity;
 import com.linkloving.rtring_new.logic.UI.device.FirmwareDTO;
+import com.linkloving.rtring_new.logic.UI.launch.AppStartActivity;
 import com.linkloving.rtring_new.logic.UI.main.boundwatch.BoundActivity;
 import com.linkloving.rtring_new.logic.UI.main.datachatactivity.WeightActivity;
 import com.linkloving.rtring_new.logic.UI.main.materialmenu.Left_viewVO;
@@ -97,6 +98,7 @@ import com.linkloving.rtring_new.utils.ToolKits;
 import com.linkloving.rtring_new.utils.UnitTookits;
 import com.linkloving.rtring_new.utils.logUtils.MyLog;
 import com.linkloving.rtring_new.utils.manager.AsyncTaskManger;
+import com.linkloving.rtring_new.utils.sportUtils.LntUtils;
 import com.linkloving.rtring_new.utils.sportUtils.SportDataHelper;
 import com.linkloving.rtring_new.utils.sportUtils.TimeUtils;
 import com.linkloving.utils.TimeZoneHelper;
@@ -208,8 +210,8 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
     Runnable mScrollViewRefreshingRunnable = new Runnable() {
         @Override
         public void run() {
-            Message ms = new Message();
-            mScrollViewRefreshingHandler.sendMessageDelayed(ms, 15000);
+         /*   Message ms = new Message();
+            mScrollViewRefreshingHandler.sendMessageDelayed(ms, 15000);*/
         }
     };
 
@@ -255,6 +257,7 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
         }
         //刷新企业logo
         refreshEntHead();
+        startNotificationService();
     }
 
     @Override
@@ -264,6 +267,9 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
         AppManager.getAppManager().removeActivity(this);
         // 如果有未执行完成的AsyncTask则强制退出之，否则线程执行时会空指针异常哦！！！
         AsyncTaskManger.getAsyncTaskManger().finishAllAsyncTask();
+        if (RechargeUtil.closeInterface!=null){
+            RechargeUtil.closeInterface.onClose();
+        }
     }
 
 //    @Override
@@ -290,6 +296,8 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
 //        ScreenUtils.applyKitKatTranslucency(this);
         AppManager.getAppManager().addActivity(this);
         ButterKnife.inject(this);
+        //lnt 读取需要绑定
+        LntUtils.registApp(PortalActivity.this);
         contentLayout = (ViewGroup) findViewById(R.id.main);
         userEntity = MyApplication.getInstance(this).getLocalUserInfoProvider();
         provider = BleService.getInstance(this).getCurrentHandlerProvider();
@@ -340,6 +348,7 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
 //                super.onPostExecute(sportRecordUploadDTO);
 //            }
 //        }.execute();
+        PermissionUtil.bluetoothPermission(PortalActivity.this);
 
     }
     private void autoInsertWeight() {
@@ -769,7 +778,7 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
         }else {
             MyLog.i(TAG,"获得的getEntEntity是空的");
             Resources res = getResources();
-            Bitmap bmp = BitmapFactory.decodeResource(res, R.mipmap.new_logo);
+            Bitmap bmp = BitmapFactory.decodeResource(res, R.mipmap.new_logo2);
             Drawable drawable =new BitmapDrawable(res,bmp);
             toolbar.setLogo(drawable);
         }
@@ -954,11 +963,8 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
 
                 int walkcal = ToolKits.calculateCalories(Float.parseFloat(mDaySynopic.getWork_distance()),(int) walktime * 60,userEntity.getUserBase().getUser_weight());
                 int runcal = ToolKits.calculateCalories(Float.parseFloat(mDaySynopic.getRun_distance()),(int) runtime * 60,userEntity.getUserBase().getUser_weight());
-
 //                int runcal = _Utils.calculateCalories(Double.parseDouble(mDaySynopic.getRun_distance()) / (Double.parseDouble(mDaySynopic.getRun_duration())), (int) runtime * 60, userEntity.getUserBase().getUser_weight());
-
 //                int walkcal = _Utils.calculateCalories(Double.parseDouble(mDaySynopic.getWork_distance()) / (Double.parseDouble(mDaySynopic.getWork_duration())), (int) walktime * 60, userEntity.getUserBase().getUser_weight());
-
                 MyLog.e(TAG,"runcal1:"+runcal);
                 MyLog.e(TAG,"walkcal:"+walkcal);
 
@@ -990,6 +996,8 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
         AsyncTaskManger.getAsyncTaskManger().addAsyncTask(currentDataAsync = dataasyncTask);
         dataasyncTask.execute();
     }
+
+
 
     /**
      * 刷新条目明细 （数值，进度条，百分比）
@@ -1178,9 +1186,7 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
                         PreferencesToolkits.saveInfoBymodelName(PortalActivity.this,model_name,modelInfo);
                         if(modelInfo.getAncs()!=0){ //有消息提醒
                             MyApplication.getInstance(PortalActivity.this).getLocalUserInfoProvider().getDeviceEntity().setDevice_type(MyApplication.DEVICE_WATCH);
-                            if(!ToolKits.isEnabled(PortalActivity.this)){
-                                startActivity(new Intent(NotificationCollectorService.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-                            }
+
                         }
                         //开始处理页面是否显示
                         refreshVISIBLE();
@@ -1199,6 +1205,13 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
 
         }
     };
+
+
+    private void startNotificationService(){
+        if(!ToolKits.isEnabled(PortalActivity.this)){
+            startActivity(new Intent(NotificationCollectorService.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1232,7 +1245,6 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
         else if (requestCode == CommParams.REQUEST_CODE_BOUND_BAND && resultCode == Activity.RESULT_OK) {
             MyLog.e(TAG, "手环绑定成功");
         } else if (requestCode == CommParams.REQUEST_CODE_BOUND_WATCH && resultCode == Activity.RESULT_OK) {
-
         }
     }
 
@@ -1676,8 +1688,8 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
                 if (provider.isConnectedAndDiscovered()) {
                     Log.e(TAG, "卡号为岭南通---");
                     //岭南通内嵌读取流程
-                    RechargeUtil.setBluetoothBase(PortalActivity.this,provider);
-                    BalanceUtil.queryBalance(PortalActivity.this,PortalActivity.this,RechargeUtil.LINKLOVE,provider.getCurrentDeviceMac(),null,false,new BalanceCallbackInterface() {
+                    RechargeUtil.setBluetoothBase(MyApplication.getInstance(PortalActivity.this),provider);
+                    BalanceUtil.queryBleBalance(PortalActivity.this,PortalActivity.this,RechargeUtil.LINKLOVE,provider.getCurrentDeviceMac(),null,false,new BalanceCallbackInterface() {
                         @Override
                         public void onSuccess(String msg, String balance, String cardNum, String thresholdValue) {
                             // TODO Auto-generated method stub
@@ -1695,6 +1707,7 @@ public class PortalActivity extends AutoLayoutActivity implements MenuNewAdapter
                         @Override
                         public void onFail(String arg0) {
                             // TODO Auto-generated method stub
+                            Log.e(TAG, "查询余额onFail回调msg:"+arg0);
                         }
                     });
                 }

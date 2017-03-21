@@ -10,6 +10,7 @@
     <color name="orangeOver">#FF7700</color>
     <color name="orangeStart">#FFAA00</color>
     <color name="transparent">#00000000</color>
+    <color name="blue">#1A2B5F</color>
     <!-- 西红柿色 -->
     <color name="orangered">#FF4500</color>
     <color name="chat_view_orange">#ffa737</color>
@@ -26,6 +27,7 @@
     <!--更多-->
     <color name="text_bluesky1">#3A87AD</color> <!-- 天空深蓝 -->
     <color name="sleep_blue">#30C3F9</color> <!-- 睡眠数据蓝色 -->
+    <color name="totie_blue">#1b7dc2</color> <!-- 睡眠数据蓝色 -->
     <color name="bg_gray">#A5A5A5</color>
     <drawable name="smssdk_dialog_btn_nor">#00000000</drawable>
     <drawable name="smssdk_dialog_btn_pre">#ff282a2b</drawable>

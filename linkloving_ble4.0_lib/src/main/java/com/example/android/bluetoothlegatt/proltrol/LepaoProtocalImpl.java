@@ -72,6 +72,23 @@ public class LepaoProtocalImpl implements LepaoProtocol {
 			return null;
 		}
 	}
+
+	public List<LpHeartrateData> getHeartrate(int offset, int length, int detial)throws BLException, LPException{
+		Log.e("getHeartrate","getHeartrate执行了");
+		WatchRequset req = new WatchRequset();
+		req.appendByte(seq++).appendByte(LepaoCommand.COMMAND_GET_HEARTRATE).appendByte((byte) offset)
+				.appendByte((byte) length).makeCheckSum();
+		LPUtil.printData(req.getData(), " getHeartrate");
+		WatchResponse resp = this.sendData2BLE(req);
+		LPUtil.printData(resp.getData(), " getHeartrateresp");
+		if(resp.getData()[4]==0){
+			return   resp.toLPHeartrateDataList(resp);
+		}else{
+			List<LpHeartrateData> list = new ArrayList<LpHeartrateData>();
+			return list;
+		}
+	}
+
 	
 	//获取 modelname
 	public LPDeviceInfo getModelName() throws BLException, LPException {

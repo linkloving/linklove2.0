@@ -92,6 +92,7 @@ public class NotificationCollectorService  extends NotificationListenerService{
 			 //APP还未启动的时候  获取userEntity会null
 			 return;
 		 }
+		MyLog.e( TAG , "接收到的是"+ sbn.getNotification().extras.getString(Notification.EXTRA_TEXT));
 		 userEntity = MyApplication.getInstance(NotificationCollectorService.this).getLocalUserInfoProvider();
 		 provider = BleService.getInstance(NotificationCollectorService.this).getCurrentHandlerProvider();  //获取蓝牙实例
 		 Notification mNotification = sbn.getNotification();

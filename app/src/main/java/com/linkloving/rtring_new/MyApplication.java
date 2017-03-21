@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -25,6 +26,8 @@ import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Response;
 import com.youzan.sdk.YouzanSDK;
 
+import org.xutils.x;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -32,7 +35,7 @@ import java.util.Observer;
 /**
  * Created by zkx on 2016/3/2.
  */
-public class MyApplication extends Application{
+public class MyApplication extends MultiDexApplication {
     private final static String TAG = MyApplication.class.getSimpleName();
 
     public final static String SERVICE_WATCH = "com.linkloving.rtring_new";
@@ -158,6 +161,7 @@ public class MyApplication extends Application{
                 YouzanSDK.init(this, "32876aeee6e816263f1465378270032");
             }
         }
+        x.Ext.init(this);
     }
     /**
      * 本地网络状态变更消息接收对象.

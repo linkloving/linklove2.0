@@ -30,6 +30,7 @@ public class ThirdLoginPresenter {
                     public void run() {
                         userloginView.dismissLoading();
                         if(toRegister){
+
                             userloginView.toAvatarActivity();
                         }else{
                             userloginView.toPortaActivity();

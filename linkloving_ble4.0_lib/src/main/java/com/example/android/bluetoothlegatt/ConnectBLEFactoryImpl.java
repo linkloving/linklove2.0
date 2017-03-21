@@ -133,11 +133,11 @@ public class ConnectBLEFactoryImpl implements ConnectFactoryImpl{
 			Log.e("ConnectBLEFactoryImpl","powerOff数据发送失败");
 			return false;
 		}
+
 	}
 
 	@Override
 	public Object powerOn() {
-		
 		try {
 			return lpi.openSmartCard();
 		} catch (LPException e) {

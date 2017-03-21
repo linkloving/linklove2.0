@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.linkloving.rtring_new.MyApplication;
 import com.linkloving.rtring_new.R;
 import com.linkloving.rtring_new.basic.toolbar.ToolBarActivity;
+import com.linkloving.rtring_new.logic.dto.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +36,32 @@ public class GuideActivity extends ToolBarActivity {
 
     @Override
     protected void initView() {
+        UserEntity userEntity = MyApplication.getInstance(GuideActivity.this).getLocalUserInfoProvider();
+
+        int device_type = userEntity.getDeviceEntity().getDevice_type();
+
         SetBarTitleText(getString(R.string.getting_started));
         guideViewPager = (ViewPager) findViewById(R.id.guideViewPager);
         LayoutInflater lf = getLayoutInflater().from(this);
         firstView = lf.inflate(R.layout.activity_guide_view, null);
         secondView = lf.inflate(R.layout.activity_guide_view, null);
         ImageView imageView1 = (ImageView) firstView.findViewById(R.id.imageView);
-        imageView1.setImageResource(R.mipmap.help_one);
-        views.add(firstView);
         ImageView imageView2 = (ImageView) secondView.findViewById(R.id.imageView);
-        imageView2.setImageResource(R.mipmap.help_two);
+        switch (device_type){
+            case MyApplication.DEVICE_BAND:
+                imageView1.setImageResource(R.mipmap.help_one_bund1);
+                imageView2.setImageResource(R.mipmap.help_two_bund1);
+                break;
+            case MyApplication.DEVICE_WATCH:
+                imageView1.setImageResource(R.mipmap.help_one_watch);
+                imageView2.setImageResource(R.mipmap.help_two_watch);
+                break;
+            case MyApplication.DEVICE_BAND_VERSION3:
+                imageView1.setImageResource(R.mipmap.help_one_bund3);
+                imageView2.setImageResource(R.mipmap.help_two_bund3);
+                break;
+        }
+        views.add(firstView);
         views.add(secondView);
         views.add(new View(this));
         guidePageAdapter = new GuidePageAdapter();

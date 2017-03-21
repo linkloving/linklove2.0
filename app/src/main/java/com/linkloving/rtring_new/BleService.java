@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -15,12 +16,14 @@ import android.util.Log;
 
 import com.example.android.bluetoothlegatt.BLEHandler;
 import com.example.android.bluetoothlegatt.BLEProvider;
+import com.example.android.bluetoothlegatt.proltrol.LpHeartrateData;
 import com.example.android.bluetoothlegatt.proltrol.dto.LPDeviceInfo;
 import com.example.android.bluetoothlegatt.proltrol.dto.LPSportData;
 import com.linkloving.band.dto.DaySynopic;
 import com.linkloving.band.dto.SportRecord;
 import com.linkloving.rtring_new.db.sport.UserDeviceRecord;
 import com.linkloving.rtring_new.db.summary.DaySynopicTable;
+import com.linkloving.rtring_new.logic.UI.HeartRate.GreendaoUtils;
 import com.linkloving.rtring_new.logic.UI.device.incomingtel.IncomingTelActivity;
 import com.linkloving.rtring_new.logic.dto.UserEntity;
 import com.linkloving.rtring_new.prefrences.LocalUserSettingsToolkits;
@@ -38,6 +41,9 @@ import java.util.List;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import Trace.GreenDao.DaoMaster;
+import Trace.GreenDao.heartrate;
 
 /**
  * Created by Administrator on 2016/3/17.
@@ -136,6 +142,8 @@ public class BleService extends Service {
     public static void setCANCLE_ANCS(boolean cANCLE_ANCS) {
         CANCLE_ANCS = cANCLE_ANCS;
     }
+    private GreendaoUtils greendaoUtils;
+    private DaoMaster.DevOpenHelper heartrateHelper;
 
     /*****》成员变量的get/set方法！end《******/
 
@@ -159,6 +167,9 @@ public class BleService extends Service {
 
         //启动ble连接并且每一分钟对连接状态检查一遍。确保所有型号的手机处于连接状态。未连接的启动连接。
         bleConnectAndCheckConnectStateInTime();
+        heartrateHelper = new DaoMaster.DevOpenHelper(BleService.this, "heartrate", null);
+        SQLiteDatabase readableDatabase = heartrateHelper.getReadableDatabase();
+        greendaoUtils = new GreendaoUtils(BleService.this, readableDatabase);
     }
 
     /**
@@ -298,7 +309,6 @@ public class BleService extends Service {
                 super.handleNotEnableMsg();
                 setNEED_SCAN(false);
             }
-
             // ** 目前APP的同步逻辑时，当在主界面时，一旦连接上蓝牙（连接的场景有2种：1）每次登陆时的
             // ** 自动同步数据），2）主页上下拉同步时）就同时同步所有信息（全流程同步包括数据）
             // 重写本方法的目的是希望把全流程同步数据放到后台无条件执行（之前是放在Observer里执行，
@@ -499,6 +509,7 @@ public class BleService extends Service {
                 MyLog.e(TAG, "【NEW离线数据同步】handleDataEnd");
                 //设置时间指令
                 provider.SetDeviceTime(BleService.this);
+                provider.GetHeartrate(BleService.this);
 
             }
 
@@ -525,6 +536,23 @@ public class BleService extends Service {
                     }
                 }
             }
+
+            /**
+             * 读取心率成功的返回
+             * @param obj
+             */
+            protected  void notifyforgerHeartList(ArrayList<LpHeartrateData>  obj){
+                MyLog.e(TAG,"notifyforgerHeartListsuccess");
+                super.notifyforgerHeartList(obj);
+                for (LpHeartrateData obj1: obj){
+                    greendaoUtils.add(obj1.getStartTime(),obj1.getMaxRate(),obj1.getAvgRate());
+                    List<heartrate> search = greendaoUtils.search(obj1.getStartTime());
+                    MyLog.e(TAG,search.get(0).getMax()+"");
+                    MyLog.e(TAG,"-----------------------");
+                }
+            }
+
+
 
             @Override
             protected void notifyForSetPowerSucess() {

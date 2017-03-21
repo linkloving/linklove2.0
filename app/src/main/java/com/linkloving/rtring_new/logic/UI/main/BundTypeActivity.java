@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +47,8 @@ public class BundTypeActivity extends ToolBarActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(typeAdapeter);
+
+
     }
 
     @Override
@@ -65,6 +68,8 @@ public class BundTypeActivity extends ToolBarActivity {
 
     }
 
+
+
     private  class  TypeAdapter extends RecyclerView.Adapter{
 
         @Override
@@ -73,6 +78,7 @@ public class BundTypeActivity extends ToolBarActivity {
 //          不知道为什么在xml设置的“android:layout_width="match_parent"”无效了，需要在这里重新设置
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(lp);
+
             return new MenuViewHolder(view);
         }
 
@@ -122,6 +128,7 @@ public class BundTypeActivity extends ToolBarActivity {
                 super(itemView);
                 layout = (LinearLayout) itemView.findViewById(R.id.layout);
                 image = (ImageView) itemView.findViewById(R.id.bund_img);
+
                 tv = (TextView) itemView.findViewById(R.id.bund_txt);
             }
         }

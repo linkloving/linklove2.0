@@ -10,7 +10,7 @@ public class Left_viewVO {
     public static final int RANKING = 1;
     public static final int GOAL = 2;
     public static final int KEFU = 3;
-    public static final int SHOP = 4;
+//    public static final int SHOP = 4;
     public static final int MORE = 5;
 
     public static int[] menuIcon = {
@@ -18,7 +18,7 @@ public class Left_viewVO {
             R.mipmap.ic_menu_rank,
             R.mipmap.ic_menu_goal,
             R.mipmap.ic_menu_kefu,
-            R.mipmap.ic_menu_mall,
+//            R.mipmap.ic_menu_mall,
             R.mipmap.ic_menu_more
     };
     public static int[] menuText = {
@@ -26,7 +26,7 @@ public class Left_viewVO {
             R.string.ranking_title,
             R.string.menu_goal,
             R.string.service_center_title,
-            R.string.shop,
+//            R.string.shop,
             R.string.general_more
     };
 }

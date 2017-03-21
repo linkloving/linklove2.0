@@ -108,10 +108,10 @@ public class MenuNewAdapter extends RecyclerView.Adapter {
                         IntentFactory.start_CustomerService_ActivityIntent((Activity) mContext, Feedback.PAGE_INDEX_ONE);
                         break;
 
-                    case Left_viewVO.SHOP:
-                        //        跳转到更多界面
-                        registerYouzanUserForWeb();
-                        break;
+//                    case Left_viewVO.SHOP:
+//                        //        跳转到更多界面
+//                        registerYouzanUserForWeb();
+//                        break;
 
                     case Left_viewVO.MORE:
                         //        跳转到更多界面

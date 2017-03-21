@@ -38,12 +38,12 @@
             <ImageView
                 android:id="@+id/middleIV"
                 android:layout_width="271dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="40dp"
+                android:layout_height="230dp"
+                android:layout_marginTop="10dp"
                 android:background="@mipmap/bund3ed_step1" />
 
             <LinearLayout
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -55,35 +55,9 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginTop="30dp"
                     android:textSize="18sp"
-                    android:text="@string/bound_step_text1"
+                    android:text="@string/bound3_step_text1"
                     android:textColor="@color/black" />
 
-                <TextView
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/bound_step_text2"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/bound_step_text3"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/bound_step_text4"
-                    android:textColor="@color/black" />
 
             </LinearLayout>
 

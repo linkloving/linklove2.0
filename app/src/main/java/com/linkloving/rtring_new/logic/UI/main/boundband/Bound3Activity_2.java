@@ -24,7 +24,7 @@ public class Bound3Activity_2 extends ToolBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bound_activity_2);
+        setContentView(R.layout.activity_bound_activity_3);
     }
 
     @Override

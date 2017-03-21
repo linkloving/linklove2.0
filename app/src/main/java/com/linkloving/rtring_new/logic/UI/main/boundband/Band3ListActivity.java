@@ -1,6 +1,7 @@
 package com.linkloving.rtring_new.logic.UI.main.boundband;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -8,11 +9,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +52,8 @@ import com.yolanda.nohttp.Response;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by zkx on 2016/8/8. 手环3.0 绑定列表
@@ -65,9 +73,24 @@ public class Band3ListActivity extends ToolBarActivity {
 
     private ProgressDialog progressDialog;
     String BoundFailMSG_SHOUHUAN;
+
+    public static final int RESULT_OTHER = 1000;
     public static final int RESULT_BACK = 999;
     public static final int RESULT_FAIL = 998;
+    public static final int RESULT_NOCHARGE = 997;
     public static final int RESULT_DISCONNECT = 996;
+
+    public static final int REFRESH_BUTTON = 0x123;
+
+    private int button_txt_count = 40;
+    private Object[] button_txt = {button_txt_count};
+    private Button boundBtn;
+    private AlertDialog dialog_bound;
+
+    public static final int sendcount_MAX = 15;
+    private int sendcount = 0;
+    public static final int sendcount_time = 2000;
+    private Timer timer;
 
     private BLEHandler.BLEProviderObserverAdapter observerAdapter = null;
 
@@ -160,9 +183,40 @@ public class Band3ListActivity extends ToolBarActivity {
                     progressDialog.setMessage(getString(R.string.portal_main_state_connecting));
                     progressDialog.show();
                 }
-
             }
         });
+        LayoutInflater inflater = getLayoutInflater();
+        final View layout = inflater.inflate(R.layout.activity_bound_band3, (LinearLayout) findViewById(R.id.layout_bundband));
+        boundBtn = (Button) layout.findViewById(R.id.btncancle);
+        boundBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialog_bound.dismiss();
+                if (timer != null)
+                    timer.cancel();
+                provider.clearProess();
+                BleService.getInstance(Band3ListActivity.this).releaseBLE();
+                setResult(RESULT_BACK);
+                finish();
+            }
+        });
+        button_txt[0] = button_txt_count;
+        dialog_bound = new AlertDialog.Builder(Band3ListActivity.this)
+                .setView(layout)
+                .setTitle(R.string.portal_main_isbounding)
+                .setOnKeyListener(new DialogInterface.OnKeyListener() {
+
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                })
+                .setCancelable(false).create();
 
     }
 
@@ -170,6 +224,57 @@ public class Band3ListActivity extends ToolBarActivity {
     protected void initListeners() {
 
     }
+
+    Runnable butttonRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Message msg = new Message();
+            msg.what = REFRESH_BUTTON;
+            boundhandler.sendMessage(msg);
+        }
+
+        ;
+    };
+
+
+    Runnable boundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Message msg = new Message();
+            msg.what = 0x333;
+            boundhandler.sendMessage(msg);
+        }
+
+        ;
+    };
+
+    Handler boundhandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0x333:
+                    provider.requestbound_recy(Band3ListActivity.this);
+                    break;
+                case REFRESH_BUTTON:
+                    button_txt[0] = button_txt_count;
+                    Log.e(TAG, button_txt_count + "");
+                    String second_txt = MessageFormat.format(getString(R.string.bound_scan_sqr), button_txt);
+                    boundBtn.setText(second_txt);
+                    if (button_txt_count == 0) {
+                        if (dialog_bound != null && dialog_bound.isShowing()) {
+                            if (timer != null)
+                                timer.cancel();
+                            dialog_bound.dismiss();
+                        }
+                        BleService.getInstance(Band3ListActivity.this).releaseBLE();
+                        setResult(RESULT_FAIL);
+                        finish();
+                    }
+                    break;
+            }
+        }
+
+        ;
+    };
 
 
     private class BLEProviderObserver extends BLEHandler.BLEProviderObserverAdapter {
@@ -228,9 +333,69 @@ public class Band3ListActivity extends ToolBarActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            provider.getModelName(Band3ListActivity.this);
-
+            provider.requestbound_fit(Band3ListActivity.this);
         }
+
+
+        @Override
+        public void updateFor_BoundNoCharge() {
+            super.updateFor_BoundNoCharge();
+            Log.e("BLEListActivity", "updateFor_BoundNoCharge");
+            if (dialog_bound != null && dialog_bound.isShowing()) {
+                if (timer != null)
+                    timer.cancel();
+                dialog_bound.dismiss();
+            }
+            setResult(RESULT_NOCHARGE);
+            finish();
+        }
+
+        @Override
+        public void updateFor_BoundContinue() {
+            super.updateFor_BoundContinue();
+            if(progressDialog!=null && progressDialog.isShowing() )
+                progressDialog.dismiss();
+            if(dialog_bound!=null && !dialog_bound.isShowing() )
+                dialog_bound.show();
+            if (dialog_bound != null && dialog_bound.isShowing()) {
+                if(timer==null){
+                    timer = new Timer(); // 每1s更新一下
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            boundhandler.post(butttonRunnable);
+                            button_txt_count--;
+                            MyLog.e(TAG, "Timer开始了");
+                            if (button_txt_count < 0) {
+                                timer.cancel();
+                            }
+                        }
+                    }, 0, 1000);
+                }
+            }
+
+            if (sendcount < sendcount_MAX) {
+                boundhandler.postDelayed(boundRunnable, sendcount_time);
+                sendcount++;
+            } else {
+                Log.e("BandListActivity", "已经发送超出15次");
+                provider.clearProess();
+                BleService.getInstance(Band3ListActivity.this).releaseBLE();
+                setResult(RESULT_FAIL);
+                finish();
+            }
+        }
+
+        @Override
+        public void updateFor_BoundSucess() {
+            provider.SetDeviceTime(Band3ListActivity.this);
+        }
+
+        @Override
+        public void updateFor_handleSetTime() {
+            provider.getModelName(Band3ListActivity.this);
+        }
+
 
         @Override
         public void updateFor_notifyForModelName(LPDeviceInfo latestDeviceInfo) {

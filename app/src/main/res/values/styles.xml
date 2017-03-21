@@ -14,7 +14,7 @@
     <!--v21使用-->
     <style name="AppThemeParent" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorAccent">@color/yellow_title</item>
+        <item name="colorAccent">@color/totie_blue</item>
     </style>
     <!--v21使用-->
     <style name="AppTheme" parent="AppThemeParent">
